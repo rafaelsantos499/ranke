@@ -1,66 +1,86 @@
-<template lang="">
+<template>
   <section class="produto-container">
-    {{ produtosTotal }}
-    <div v-if="produtos && produtos.length" class="produtos">
-      <div
-        class="produto"
-        v-for="{ id, nome, preco, descricao, fotos } in produtos"
-        :key="id"
-      >
-        <router-link to="/">
-          <img v-if="fotos" :src="fotos[0].src" :alt="fotos[0].titulo" />
-          <p class="preco">{{ preco }}</p>
-          <h2 class="titulo">{{ nome }}</h2>
-          <p class="descricao">{{ descricao }}</p>
-        </router-link>
+    <transition mode="out-in">
+      <div v-if="produtos && produtos.length" class="produtos" key="produtos">
+        <div
+          class="produto"
+          v-for="{ id, nome, preco, descricao, fotos } in produtos"
+          :key="id"
+        >
+          <router-link :to="{ name: 'produto', params: { id: id } }">
+            <img v-if="fotos" :src="fotos[0].src" :alt="fotos[0].titulo" />
+            <p class="preco">{{ preco }}</p>
+            <h2 class="titulo">{{ nome }}</h2>
+            <p class="descricao">{{ descricao }}</p>
+          </router-link>
+        </div>
+        <ProdutoPaginar
+          :produtosTotal="produtosTotal"
+          :produtosPorPagina="produtosPorPagina"
+        />
       </div>
-      <ProdutoPaginar
-        :produtosTotal="produtosTotal"
-        :produtosPorPagina="produtosPorPagina"
-      />
-    </div>
-    <div v-else-if="produtos && produtos.length === 0" class="sem-resultados">
-      <p>Busca sem resultados. Temte buscar outro termo.</p>
-    </div>
+      <div
+        v-else-if="produtos && produtos.length === 0"
+        key="sem-resultados"
+        class="sem-resultados"
+      >
+        <p>Busca sem resultados. Temte buscar outro termo.</p>
+      </div>
+
+      <PaginaCarregando v-else key="carregando" />
+    </transition>
   </section>
 </template>
 
 <script>
-import { ref, watch } from "vue";
+import { Transition, onMounted, ref, watch } from "vue";
 import { api } from "@/services.js";
-import router from "../router";
+import { onBeforeRouteUpdate, useRoute } from "vue-router";
 import ProdutoPaginar from "./ProdutoPaginar.vue";
+import PaginaCarregando from "./PaginaCarregando.vue";
 export default {
   name: "ProdutoLista",
   components: {
     ProdutoPaginar,
+    PaginaCarregando,
+    Transition,
   },
   setup() {
+    const route = useRoute();
     const produtos = ref(null);
 
     const url = ref("");
     const produtosTotal = ref(0);
     const produtosPorPagina = ref(9);
 
-    router.afterEach(async (to, from) => {
-      let teste = "";
-      teste = "&" + to.fullPath.replace("/", "").replace("?", "");
-
-      return (url.value = `/produto?_limit=${produtosPorPagina.value}` + teste);
+    onMounted(() => {
+      buscaProdutos(route);
     });
 
-    watch(url, (novovalor, antigovalor) => {
-      api.get(novovalor).then((response) => {
+    onBeforeRouteUpdate((to, from) => {
+      buscaProdutos(to);
+    });
+
+    function buscaProdutos(query) {
+      produtos.value = null;
+      let teste = query.fullPath
+        ? "&" + query.fullPath.replace("/", "").replace("?", "")
+        : "";
+
+      const path = `/produto?_limit=${produtosPorPagina.value}${teste}`;
+
+      api.get(path).then((response) => {
         produtosTotal.value = Number(response.headers["x-total-count"]);
         produtos.value = response.data;
       });
-    });
+    }
 
     return {
       produtos,
       url,
       produtosTotal,
       produtosPorPagina,
+      buscaProdutos,
     };
   },
 };

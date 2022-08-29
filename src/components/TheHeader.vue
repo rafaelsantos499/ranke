@@ -4,12 +4,33 @@
       <router-link class="logo" to="/">
         <img src="@/assets/ranek.svg" alt="Ranek" />
       </router-link>
-      <router-link class="btn" to="/login"> Vender / Login </router-link>
+      <router-link class="btn" v-if="store.state.login" to="/usuario">{{
+        nome
+      }}</router-link>
+      <router-link class="btn" to="/login" v-else> Vender / Login </router-link>
     </nav>
   </header>
 </template>
 <script>
-export default {};
+import { onMounted, ref, computed } from "vue";
+import { useStore } from "vuex";
+
+export default {
+  name: "TheHeader",
+  setup() {
+    const store = useStore();
+    // const nome = ref("");
+
+    const nome = computed(() => {
+      return store.state.usuario.nome.replace(/ .*/, "");
+    });
+
+    return {
+      store,
+      nome,
+    };
+  },
+};
 </script>
 <style scoped>
 nav {
