@@ -5,7 +5,14 @@ const axiosPadrao = axios.create({
 });
 
 export const api = {
-  get(endpint) {
-    return axiosPadrao.get(endpint);
+  get(endpoint) {
+    return axiosPadrao.get(endpoint);
+  },
+  post(endpoint, body) {
+    return axiosPadrao.post(endpoint, body);
   },
 };
+
+export function getCep(cep) {
+  return axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+}

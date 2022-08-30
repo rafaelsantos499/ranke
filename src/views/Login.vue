@@ -30,6 +30,8 @@ export default {
       senha: "",
     });
 
+    console.log(store.state.usuario.nome);
+
     function logar() {
       store.dispatch("getUsuario", login.email);
       router.push({ name: "usuario" });
