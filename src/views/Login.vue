@@ -30,11 +30,15 @@ export default {
       senha: "",
     });
 
-    console.log(store.state.usuario.nome);
+    async function logar() {
+      const response = await store.dispatch("getUsuario", login.email);
 
-    function logar() {
-      store.dispatch("getUsuario", login.email);
-      router.push({ name: "usuario" });
+      if (response) {
+        console.log("logado");
+        router.push({ name: "usuario" });
+      } else {
+        alert("Não existe");
+      }
     }
 
     return {

@@ -21,8 +21,30 @@ const router = createRouter({
     },
     {
       path: "/usuario",
-      name: "usuario",
+
       component: () => import("@/views/usuario/Usuario.vue"),
+      children: [
+        {
+          path: "",
+          name: "usuario",
+          component: () => import("@/views/usuario/UsuarioProduto.vue"),
+        },
+        {
+          path: "compras",
+          name: "compras",
+          component: () => import("@/views/usuario/UsuarioCompras.vue"),
+        },
+        {
+          path: "editar",
+          name: "usuario-editar",
+          component: () => import("@/views/usuario/UsuarioEditar.vue"),
+        },
+        {
+          path: "vendas",
+          name: "vendas",
+          component: () => import("@/views/usuario/UsuarioVendas.vue"),
+        },
+      ],
     },
   ],
   scrollBehavior() {
