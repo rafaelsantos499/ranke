@@ -45,6 +45,7 @@ const store = createStore({
           });
       });
     },
+
     getUsuario(context, payload) {
       return new Promise((resolve, reject) => {
         api

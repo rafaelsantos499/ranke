@@ -8,12 +8,12 @@
       <li v-for="produto in dataProduto">
         <ProdutoItem :produto="produto">
           {{ produto.descricao }}
+          <button class="deletar" @click="deletarProduto(produto.id)">
+            Deletar
+          </button>
         </ProdutoItem>
       </li>
     </ul>
-
-    <br />
-    <!-- {{ usuario_produto }} -->
   </section>
 </template>
 <script>
@@ -21,6 +21,7 @@ import { useStore } from "vuex";
 import { onMounted, ref } from "vue";
 import ProdutoAdicionar from "../../components/ProdutoAdicionar.vue";
 import ProdutoItem from "../../components/ProdutoItem.vue";
+import { api } from "../../services";
 
 export default {
   name: "UsuarioProdutos",
@@ -31,6 +32,20 @@ export default {
   setup() {
     const store = useStore();
     const dataProduto = ref();
+    const deletarProduto = (id) => {
+      const confirmar = window.confirm("Deseja Remover esse produto?");
+
+      if (confirmar) {
+        api
+          .delete(`/produto/${id}`)
+          .then(() => {
+            store.dispatch("getUsuarioProduto");
+          })
+          .catch((error) => {
+            console.log(error.response);
+          });
+      }
+    };
 
     onMounted(async () => {
       if (store.state.login) {
@@ -39,18 +54,8 @@ export default {
       }
     });
 
-    // if (store.state.login) {
-
-    // }
-
-    // const usuario_produto = store.dispatch("getUsuarioProduto");
-
-    //  mapActions(["getUsuarioProduto"]);
-
-    // if (store.state.login) {
-    // }
-
     return {
+      deletarProduto,
       dataProduto,
       store,
     };
@@ -60,5 +65,18 @@ export default {
 <style scoped>
 h2 {
   margin-bottom: 20px;
+}
+
+.deletar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: url("../../assets/remove.svg") no-repeat center center;
+  width: 24px;
+  height: 24px;
+  text-indent: -140px;
+  overflow: hidden;
+  cursor: pointer;
+  border: none;
 }
 </style>

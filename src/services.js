@@ -11,6 +11,9 @@ export const api = {
   post(endpoint, body) {
     return axiosPadrao.post(endpoint, body);
   },
+  delete(endpoint) {
+    return axiosPadrao.delete(endpoint);
+  },
 };
 
 export function getCep(cep) {
