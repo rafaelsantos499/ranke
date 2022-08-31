@@ -1,11 +1,14 @@
 <template>
   <form>
-    <label for="nome">Nome</label>
-    <input id="nome" type="text" name="nome" v-model="nome" />
-    <label for="email">Email</label>
-    <input id="email" type="email" name="email" v-model="email" />
-    <label for="senha">Senha</label>
-    <input id="senha" type="password" name="senha" v-model="senha" />
+    <div class="usuario" v-if="usuarioLogadorForm">
+      <label for="nome">Nome</label>
+      <input id="nome" type="text" name="nome" v-model="nome" />
+      <label for="email">Email</label>
+      <input id="email" type="email" name="email" v-model="email" />
+      <label for="senha">Senha</label>
+      <input id="senha" type="password" name="senha" v-model="senha" />
+    </div>
+
     <label for="cep">Cep</label>
     <input
       id="cep"
@@ -32,21 +35,30 @@
 <script>
 import { computed, onMounted, reactive, ref, watch } from "vue";
 import { useStore } from "vuex";
+import router from "../../router";
 import { getCep } from "../../services";
 
 export default {
   name: "UsuarioForm",
   setup() {
     const store = useStore();
-    const nome = ref("");
-    const email = ref("");
-    const senha = ref("");
-    const cep = ref("");
-    const rua = ref("");
-    const numero = ref("");
-    const bairro = ref("");
-    const cidade = ref("");
-    const estado = ref("");
+    const nome = ref(store.state.usuario.nome);
+    const email = ref(store.state.usuario.email);
+    const senha = ref(store.state.usuario.senha);
+    const cep = ref(store.state.usuario.cep);
+    const rua = ref(store.state.usuario.rua);
+    const numero = ref(store.state.usuario.numero);
+    const bairro = ref(store.state.usuario.bairro);
+    const cidade = ref(store.state.usuario.cidade);
+    const estado = ref(store.state.usuario.estado);
+
+    // usuario
+
+    const usuarioLogadorForm = ref(
+      !store.state.login || router.name === "usuario-editar"
+    );
+
+    // console.log(UsuarioLogadorForm.value);
 
     const preencherCep = () => {
       const valueCep = cep.value.replace(/\D/g, "");
@@ -122,12 +134,14 @@ export default {
       cidade,
       estado,
       preencherCep,
+      usuarioLogadorForm,
     };
   },
 };
 </script>
 <style scoped>
-form {
+form,
+.usuario {
   display: grid;
   grid-template-columns: 80px 1fr;
   align-items: center;
@@ -136,5 +150,9 @@ form {
 .button {
   grid-column: 2;
   margin-top: 10px;
+}
+
+.usuario {
+  grid-column: 1/3;
 }
 </style>

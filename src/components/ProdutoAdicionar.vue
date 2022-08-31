@@ -6,7 +6,7 @@
     <input type="number" name="preco" id="preco" v-model="produto.preco" />
     <label for="foto">Foto</label>
     <input type="file" name="foto" id="foto" v-on:change="fotos" />
-    <label for="descricao">Descrição (R$)</label>
+    <label for="descricao">Descrição </label>
     <textarea
       name="descricao"
       id="descricao"
@@ -33,7 +33,8 @@ export default {
       nome: "",
       preco: "",
       descricao: "",
-      fotos: "",
+      fotos: null,
+      vendido: "false",
     };
 
     const formataProduto = () => {
@@ -41,7 +42,7 @@ export default {
     };
 
     const AdicionarProduto = async () => {
-      await formataProduto();
+      formataProduto();
       await api.post("/produto", produto);
       await store.dispatch("getUsuarioProduto");
     };

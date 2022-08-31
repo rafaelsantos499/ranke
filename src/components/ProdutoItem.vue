@@ -22,6 +22,10 @@
 export default {
   name: "ProdutoItem",
   props: ["produto"],
+
+  setup(props) {
+    // console.log(props);
+  },
 };
 </script>
 <style scoped>

@@ -14,6 +14,9 @@ export const api = {
   delete(endpoint) {
     return axiosPadrao.delete(endpoint);
   },
+  put(endpoint, body) {
+    return axiosPadrao.put(endpoint, body);
+  },
 };
 
 export function getCep(cep) {

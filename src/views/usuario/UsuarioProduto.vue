@@ -18,7 +18,7 @@
 </template>
 <script>
 import { useStore } from "vuex";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import ProdutoAdicionar from "../../components/ProdutoAdicionar.vue";
 import ProdutoItem from "../../components/ProdutoItem.vue";
 import { api } from "../../services";
@@ -40,12 +40,21 @@ export default {
           .delete(`/produto/${id}`)
           .then(() => {
             store.dispatch("getUsuarioProduto");
+            console.log("teste");
           })
           .catch((error) => {
             console.log(error.response);
           });
       }
     };
+
+    watch(
+      () => store.state.produtos,
+      () => {
+        dataProduto.value = store.state.produtos;
+        console.log("teste");
+      }
+    );
 
     onMounted(async () => {
       if (store.state.login) {

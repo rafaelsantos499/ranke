@@ -8,9 +8,14 @@
       </ul>
       <div class="info">
         <h1>{{ produto.nome }}</h1>
-        <p class="preco">{{ produto.preco | preco }}</p>
+        <p class="preco">
+          {{ real(produto.preco) }}
+        </p>
         <p class="descricao">{{ produto.descricao }}</p>
-        <button v-if="produto.vendido === 'false'" class="btn">Comprar</button>
+        <div v-if="produto.vendido === 'false'">
+          <button class="btn">Comprar</button>
+          <FinalizarCompra :produto="produto" />
+        </div>
         <button v-else class="btn" disabled>Produto Vendindo</button>
       </div>
     </div>
@@ -21,12 +26,25 @@
 import { onMounted, reactive, ref } from "vue";
 import { api } from "../services";
 import PaginaCarregando from "../components/PaginaCarregando.vue";
+import FinalizarCompra from "../components/FinalizarCompra.vue";
 
 export default {
-  name: "pPoduto",
+  name: "Produto",
   props: ["id"],
+  components: { PaginaCarregando, FinalizarCompra },
+
   setup(props) {
     const produto = ref();
+    const finalizarCompradoUsuario = ref("false");
+
+    function real(x) {
+      return Number(x).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+        minimumFractionDigits: 2,
+      });
+    }
+
     onMounted(() => {
       getProduto();
     });
@@ -35,9 +53,8 @@ export default {
         produto.value = response.data;
       });
     }
-    return { produto };
+    return { produto, finalizarCompradoUsuario, real };
   },
-  components: { PaginaCarregando },
 };
 </script>
 <style scoped>

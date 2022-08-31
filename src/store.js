@@ -26,6 +26,7 @@ const store = createStore({
     },
     UPDATE_USUARIO(state, payload) {
       state.usuario = Object.assign({}, state.usuario, payload);
+      state.usuario.id = state.usuario.email;
     },
     UPDATE_USUARIO_PRODUTOS(state, payload) {
       state.produtos = payload;
@@ -61,6 +62,7 @@ const store = createStore({
       });
     },
     criarUsuario(context, payload) {
+      console.log(payload);
       context.commit("UPDATE_USUARIO", { id: payload.email });
       return api.post("/usuario", payload);
     },
