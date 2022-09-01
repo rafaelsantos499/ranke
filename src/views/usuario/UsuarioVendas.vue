@@ -44,7 +44,7 @@ export default {
     const login = store.state.login;
 
     const puxarvendas = () => {
-      api.get(`/transacao?vendedor_id=${usuario}`).then((response) => {
+      api.get(`/transacao?tipo=vendedor_id`).then((response) => {
         vendas.value = response.data;
         console.log(response.data);
       });

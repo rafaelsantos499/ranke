@@ -40,7 +40,6 @@ export default {
           .delete(`/produto/${id}`)
           .then(() => {
             store.dispatch("getUsuarioProduto");
-            console.log("teste");
           })
           .catch((error) => {
             console.log(error.response);
@@ -52,7 +51,6 @@ export default {
       () => store.state.produtos,
       () => {
         dataProduto.value = store.state.produtos;
-        console.log("teste");
       }
     );
 

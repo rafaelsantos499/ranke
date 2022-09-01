@@ -25,16 +25,20 @@
   </section>
 </template>
 <script>
+import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import router from "../../router";
+
 export default {
   name: "usuario",
+
   setup() {
     const store = useStore();
+    const route = useRoute();
 
-    const deslogar = () => {
-      store.dispatch("deslogarUsuario");
-      router.push("/login");
+    const deslogar = async () => {
+      await store.dispatch("deslogarUsuario");
+      router.push({ name: "login" });
     };
 
     return {

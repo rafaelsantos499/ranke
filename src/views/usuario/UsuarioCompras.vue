@@ -35,7 +35,7 @@ export default {
     const login = store.state.login;
 
     const puxarCompras = () => {
-      api.get(`/transacao?comprador_id=${usuario}`).then((response) => {
+      api.get(`/transacao?tipo=comprador_id`).then((response) => {
         compras.value = response.data;
         console.log(response.data);
       });

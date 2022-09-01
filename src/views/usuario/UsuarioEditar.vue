@@ -1,5 +1,6 @@
 <template lang="">
   <section>
+    <ErrorNotificacao :erros="erros" />
     <UsuarioForm>
       <button class="btn" @click.prevent="atualizarUsuario">
         Atualizar Usuario
@@ -13,28 +14,29 @@ import { useStore } from "vuex";
 import router from "../../router";
 import { api } from "../../services";
 import UsuarioForm from "./UsuarioForm.vue";
+import ErrorNotificacao from "../../components/ErrorNotificacao.vue";
 export default {
   name: "UsuarioEditar",
   components: {
     UsuarioForm,
+    ErrorNotificacao,
   },
   setup() {
     const store = useStore();
+    const erros = ref([]);
     const atualizarUsuario = () => {
       api
-        .put(`/usuario/${store.state.usuario.id}`, store.state.usuario)
+        .put(`/usuario`, store.state.usuario)
         .then(() => {
-          // store.commit("UPDATE_USUARIO", store.state.usuario);
           store.dispatch("getUsuario");
           router.push({ name: "usuario" });
         })
-        .catch((error) => {
-          console.log(error.response);
-        });
+        .catch((error) => {});
     };
 
     return {
       atualizarUsuario,
+      erros,
     };
   },
 };

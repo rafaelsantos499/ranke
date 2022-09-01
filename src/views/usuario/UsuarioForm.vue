@@ -34,6 +34,7 @@
 </template>
 <script>
 import { computed, onMounted, reactive, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import router from "../../router";
 import { getCep } from "../../services";
@@ -41,6 +42,7 @@ import { getCep } from "../../services";
 export default {
   name: "UsuarioForm",
   setup() {
+    const route = useRoute();
     const store = useStore();
     const nome = ref(store.state.usuario.nome);
     const email = ref(store.state.usuario.email);
@@ -54,11 +56,8 @@ export default {
 
     // usuario
 
-    const usuarioLogadorForm = ref(
-      !store.state.login || router.name === "usuario-editar"
-    );
-
-    // console.log(UsuarioLogadorForm.value);
+    const usuarioLogadorForm =
+      !store.state.login || route.name === "usuario-editar";
 
     const preencherCep = () => {
       const valueCep = cep.value.replace(/\D/g, "");
