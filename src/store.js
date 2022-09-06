@@ -26,7 +26,7 @@ const store = createStore({
     },
     UPDATE_USUARIO(state, payload) {
       state.usuario = Object.assign({}, state.usuario, payload);
-      state.usuario.id = state.usuario.email;
+      // state.usuario.id = state.usuario.email;
     },
     UPDATE_USUARIO_PRODUTOS(state, payload) {
       state.produtos = payload;
@@ -47,24 +47,25 @@ const store = createStore({
       });
     },
 
-    getUsuario(context, payload) {
-      return new Promise((resolve, reject) => {
-        api
-          .get(`/usuario/${payload}`)
-          .then((response) => {
-            context.commit("UPDATE_USUARIO", response.data);
-            context.commit("UPDATE_LOGIN", true);
-            resolve(true);
-          })
-          .catch((e) => {
-            resolve(false);
-          });
+    getUsuario(context) {
+      return api.get(`/usuario`).then((response) => {
+        context.commit("UPDATE_USUARIO", response.data);
+        context.commit("UPDATE_LOGIN", true);
       });
     },
     criarUsuario(context, payload) {
-      console.log(payload);
       context.commit("UPDATE_USUARIO", { id: payload.email });
       return api.post("/usuario", payload);
+    },
+    logarUsuario(contex, payload) {
+      return api
+        .login({
+          username: payload.email,
+          password: payload.senha,
+        })
+        .then((response) => {
+          window.localStorage.token = `Bearer ${response.data.token}`;
+        });
     },
     deslogarUsuario(contex) {
       contex.commit("UPDATE_USUARIO", {
@@ -79,6 +80,7 @@ const store = createStore({
         cidade: "",
         estado: "",
       });
+      window.localStorage.removeItem("token");
       contex.commit("UPDATE_LOGIN", false);
     },
   },

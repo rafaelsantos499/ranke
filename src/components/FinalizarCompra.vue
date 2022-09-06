@@ -1,6 +1,7 @@
 <template>
   <section>
-    <h2>Endereço de Envio Comprar</h2>
+    <h2 v-if="login">Endereço de Envio Comprar</h2>
+    <h2 v-else>Crie sua conta primeiro.</h2>
     <UsuarioForm>
       <button class="btn" @click.prevent="finalizarCompra">
         Finalizar Compra
@@ -22,8 +23,7 @@ export default {
     const store = useStore();
     const usuario = store.state.usuario;
     const produto = props.produto;
-
-    console.log(usuario);
+    const login = store.state.login;
 
     const finalizarCompra = () => {
       if (store.state.login) {
@@ -58,7 +58,8 @@ export default {
     async function criarUsuario() {
       try {
         await store.dispatch("criarUsuario", store.state.usuario);
-        await store.dispatch("getUsuario", store.state.usuario.email);
+        await store.dispatch("logarUsuario", store.state.usuario);
+        await store.dispatch("getUsuario");
         criarTransacao();
       } catch (error) {
         console.log(error);
@@ -67,6 +68,7 @@ export default {
 
     return {
       finalizarCompra,
+      login,
     };
   },
 };

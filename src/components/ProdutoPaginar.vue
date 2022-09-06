@@ -1,7 +1,9 @@
 <template>
   <ul v-if="total > 1">
     <li v-for="pagina in paginaArrayFinal" :key="pagina">
-      <router-link :to="{ query: { _page: pagina } }">{{ pagina }}</router-link>
+      <router-link :to="{ query: { _page: pagina } }" exact>{{
+        pagina
+      }}</router-link>
     </li>
   </ul>
 </template>

@@ -8,18 +8,24 @@
       <input type="password" name="senha" id="senha" v-model="login.senha" />
 
       <button class="btn" @click.prevent="logar">logar</button>
+      <ErrorNotificacao :erros="erros" />
       <p class="perdeu">
-        <a href="/" target="_blank">Perdeu a senha? Clique aqui. </a>
+        <a
+          href="http://ranek.local/wp-login.php?action=lostpassword"
+          target="_blank"
+          >Perdeu a senha? Clique aqui.
+        </a>
       </p>
       <LoginCriar />
     </form>
   </section>
 </template>
 <script>
-import { reactive } from "vue";
+import { reactive, ref } from "vue";
 import LoginCriar from "../components/LoginCriar.vue";
 import { useStore } from "vuex";
 import router from "../router";
+import ErrorNotificacao from "../components/ErrorNotificacao.vue";
 
 export default {
   name: "Login",
@@ -29,24 +35,33 @@ export default {
       email: "",
       senha: "",
     });
+    const erros = ref([]);
 
     async function logar() {
-      const response = await store.dispatch("getUsuario", login.email);
-
-      if (response) {
-        console.log("logado");
-        router.push({ name: "usuario" });
-      } else {
-        alert("Não existe");
+      erros.value = [];
+      try {
+        await store.dispatch("logarUsuario", login);
+        await store.dispatch("getUsuario");
+        await router.push({ name: "usuario" });
+      } catch (err) {
+        erros.value.push(err.response.data.message);
       }
+
+      // if (response) {
+      // } else {
+      //   alert("Não existe");
+      // }
+
+      // const response = store.dispatch("getUsuario");
     }
 
     return {
       login,
       logar,
+      erros,
     };
   },
-  components: { LoginCriar },
+  components: { LoginCriar, ErrorNotificacao },
 };
 </script>
 <style scoped>

@@ -37,15 +37,12 @@ export default {
     const puxarCompras = () => {
       api.get(`/transacao?tipo=comprador_id`).then((response) => {
         compras.value = response.data;
-        console.log(response.data);
       });
     };
 
     onMounted(() => {
       if (login) puxarCompras();
     });
-
-    console.log(compras.value);
 
     // watch(login, () => {
     //   puxarCompras();

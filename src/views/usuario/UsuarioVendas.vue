@@ -46,7 +46,6 @@ export default {
     const puxarvendas = () => {
       api.get(`/transacao?tipo=vendedor_id`).then((response) => {
         vendas.value = response.data;
-        console.log(response.data);
       });
     };
 

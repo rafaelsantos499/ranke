@@ -51,7 +51,7 @@ export default {
 
     const url = ref("");
     const produtosTotal = ref(0);
-    const produtosPorPagina = ref(9);
+    const produtosPorPagina = ref(3);
 
     onMounted(() => {
       buscaProdutos(route);

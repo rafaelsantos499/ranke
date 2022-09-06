@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { api } from "../services";
+import store from "../store";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,8 +23,10 @@ const router = createRouter({
     },
     {
       path: "/usuario",
-
       component: () => import("@/views/usuario/Usuario.vue"),
+      meta: {
+        login: true,
+      },
       children: [
         {
           path: "",
@@ -52,6 +56,23 @@ const router = createRouter({
   },
 });
 
-router.beforeEach((to, from) => {});
+router.beforeEach((to, from) => {
+  if (to.matched.some((record) => record.meta.login)) {
+    if (!window.localStorage.token) {
+      router.push("/login");
+    } else {
+      api
+        .validateToken()
+        .then(() => {
+          store.dispatch("getUsuario");
+        })
+        .catch((error) => {
+          window.localStorage.removeItem("token");
+          store.dispatch("deslogarUsuario");
+          router.push("/login");
+        });
+    }
+  }
+});
 
 export default router;

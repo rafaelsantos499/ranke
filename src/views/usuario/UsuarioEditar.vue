@@ -31,7 +31,9 @@ export default {
           store.dispatch("getUsuario");
           router.push({ name: "usuario" });
         })
-        .catch((error) => {});
+        .catch((err) => {
+          console.log(err.response);
+        });
     };
 
     return {

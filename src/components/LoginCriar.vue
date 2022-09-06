@@ -11,6 +11,7 @@
 </template>
 <script>
 import { ref } from "vue";
+import { useRoute } from "vue-router";
 import { useStore } from "vuex";
 import router from "../router";
 
@@ -18,14 +19,16 @@ import UsuarioForm from "../views/usuario/UsuarioForm.vue";
 export default {
   name: "LoginCriar",
   setup() {
+    const route = useRoute();
     const store = useStore();
     const criar = ref(false);
 
     const criarUsuario = async () => {
       try {
         await store.dispatch("criarUsuario", store.state.usuario);
-        await store.dispatch("getUsuario", store.state.usuario.email);
-        router.push({ name: "usuario" });
+        await store.dispatch("logarUsuario", store.state.usuario);
+        await store.dispatch("getUsuario");
+        router.push("/usuario");
       } catch (error) {
         console.log(error);
       }

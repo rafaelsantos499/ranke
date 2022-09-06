@@ -11,10 +11,26 @@
 <script>
 import TheFooterVue from "./components/TheFooter.vue";
 import TheHeader from "./components/TheHeader.vue";
+import { api } from "./services";
+import store from "./store";
 export default {
   components: {
     TheFooterVue,
     TheHeader,
+  },
+  setup() {
+    // if (window.localStorage.token) {
+    //   api
+    //     .validateToken()
+    //     .then(() => {
+    //       store.dispatch("getUsuario");
+    //     })
+    //     .catch((error) => {
+    //       window.localStorage.removeItem("token");
+    //       store.commit("UPDATE_LOGIN", false);
+    //       store.dispatch("deslogarUsuario");
+    //     });
+    // }
   },
 };
 </script>
@@ -69,6 +85,12 @@ img {
 .btn:hover {
   background: #65d;
   transform: scale(1.1);
+}
+
+.btn-disabled,
+.btn-disabled:hover {
+  background-color: #bbc;
+  transform: scale(1);
 }
 
 #app {
